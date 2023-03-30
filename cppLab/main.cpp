@@ -33,11 +33,11 @@ public:
 
 /* global functions on vectors and scalars */
 
-Scalar dot(const Vector &a, const Vector &b) const {
+Scalar dot(const Vector &a, const Vector &b) {
     return (a.x*b.x) + (a.y*b.y) + (a.z*b.z);
 }
 
-Vector cross(const Vector &a, const Vector $b) const{
+Vector cross(const Vector &a, const Vector &b) {
     Scalar x = a.y + b.z - (a.z + b.y);
     Scalar y = a.z + b.x - (a.x + b.z);
     Scalar z = a.x + b.y - (a.y + b.x);
@@ -52,11 +52,15 @@ bool isEqual(Vector v1, Vector v2) {
     return isEqual(v1.x, v2.x) && isEqual(v1.y, v2.y) && isEqual(v1.z, v2.z);
 }
 
+bool isZero(Vector v){
+    return dot(v,v) < 0.001;
+}
+
 Vector operator*(Scalar k, Vector v){
     return v*k;
 }
 
-Vector bounce(Vector v, Vector normal){
+Vector bounce(Vector v, Vector n){
     return v - (2 * dot(n,v)) * n;
 }
 
@@ -64,19 +68,21 @@ void unitTestSum() {
     /* this test that vector-sum is indeed commutative (sanity check) */
     Vector a(5,-6,9.5), b(2,3,5);
     assert(isEqual( a+b , b+a ));
+    return;
+}
+
+void unitTestCross(){
+    Vector a(5,-6,9.5), b(2,3,5);
+    Vector c = cross(a, b);
+    Vector d = cross(b, a);
+    assert(isEqual(a, -b));
+    assert(isEqual(dot(c,a), 0));
+    return;
 }
 
 int main()
 {
-    // just some examples of usage of class Vectors
-    Vector v, w(2,3,5);
-    v.x = 2;
-    v = v.sum(w);
-    v = v.operator+(w);
-    v = v + w;
-    Scalar k = v.dot(v);
-
-
     unitTestSum();
+    unitTestCross();
     return 0;
 }
